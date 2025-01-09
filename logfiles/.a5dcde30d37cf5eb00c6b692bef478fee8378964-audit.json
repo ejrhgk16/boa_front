@@ -1,0 +1,135 @@
+{
+    "keep": {
+        "days": false,
+        "amount": 30
+    },
+    "auditLog": "logfiles\\.a5dcde30d37cf5eb00c6b692bef478fee8378964-audit.json",
+    "files": [
+        {
+            "date": 1733126756997,
+            "name": "logfiles\\front_log-2024-12-02.log",
+            "hash": "5d8e0d02431dfa649638f165be422c6faa5ee55b9c45e8690a8e33813557fc48"
+        },
+        {
+            "date": 1733166120684,
+            "name": "logfiles\\front_log-2024-12-03.log",
+            "hash": "384bb5fbf3a94b740e02ccd9b4e0bc1795f3552e7c3edf6cb01d595e87b73c51"
+        },
+        {
+            "date": 1733248852993,
+            "name": "logfiles\\front_log-2024-12-04.log",
+            "hash": "52bc8739d07afbd3aca246af8857cee21fbe5c1758260d669438f1adff774222"
+        },
+        {
+            "date": 1733326869707,
+            "name": "logfiles\\front_log-2024-12-05.log",
+            "hash": "78b273905f72ce463f176e7164662062e40a552310497d302fa82380ed1e183e"
+        },
+        {
+            "date": 1733419589777,
+            "name": "logfiles\\front_log-2024-12-06.log",
+            "hash": "76e576f8909f441677cc54bd673141079cb553efeef690c69d5004dc39ee79a3"
+        },
+        {
+            "date": 1733508409573,
+            "name": "logfiles\\front_log-2024-12-07.log",
+            "hash": "952ad6a322c206b44fb323cbd4a69ce254ead2d38d087d24ab81e4a0bb3ba11d"
+        },
+        {
+            "date": 1733586121141,
+            "name": "logfiles\\front_log-2024-12-08.log",
+            "hash": "e900542863dd4fa2fa1a0c21bc3d8ada00404d44dd2a6ba484b1dc1ab1b27cd6"
+        },
+        {
+            "date": 1733728421833,
+            "name": "logfiles\\front_log-2024-12-09.log",
+            "hash": "1c3798738378f88d95d935c985baafb1600f08c27f3e2deeeeb0a8d1cd832e5f"
+        },
+        {
+            "date": 1733807591916,
+            "name": "logfiles\\front_log-2024-12-10.log",
+            "hash": "0c5881e8893d7c69c95011772b9453a48b26dfd05d08fed5695f0ea3875bc71b"
+        },
+        {
+            "date": 1733850842095,
+            "name": "logfiles\\front_log-2024-12-11.log",
+            "hash": "44c711bcb5c82564a66e3ef4fe1cdbad365a1ff1f961bf442582830b74947204"
+        },
+        {
+            "date": 1733931226889,
+            "name": "logfiles\\front_log-2024-12-12.log",
+            "hash": "6325e7b7a6fbebf8dd1eb65fa93e9e09691e8b7732a0133b6e4ca9d220ee38bd"
+        },
+        {
+            "date": 1734073495683,
+            "name": "logfiles\\front_log-2024-12-13.log",
+            "hash": "56d911957562fcdc4ae9588cac778db4734eef310cce92eb57792b211f320be3"
+        },
+        {
+            "date": 1734316422389,
+            "name": "logfiles\\front_log-2024-12-16.log",
+            "hash": "ff893fd5d876fccfea2e6bc65ad94ebc028ca385801956c85174a3f6175178b9"
+        },
+        {
+            "date": 1734420913821,
+            "name": "logfiles\\front_log-2024-12-17.log",
+            "hash": "e14c7d613d23de9f429b4a4eb9034bc07907ea50bb7d64ad8346ec2e8696eb87"
+        },
+        {
+            "date": 1734507703680,
+            "name": "logfiles\\front_log-2024-12-18.log",
+            "hash": "18a9cae8b77b2ae1c2fda12f45151aadbb3c0cb31b76f338d8c85f6760927012"
+        },
+        {
+            "date": 1734534019045,
+            "name": "logfiles\\front_log-2024-12-19.log",
+            "hash": "d2db2f03d330535600d92c82334fc56c3cfd7e4809e68b5a4c98a260714f3dc5"
+        },
+        {
+            "date": 1734670873597,
+            "name": "logfiles\\front_log-2024-12-20.log",
+            "hash": "959fa572aab7b062ffe53396105562c63f816d349836d822449293b49ab014fd"
+        },
+        {
+            "date": 1734851374139,
+            "name": "logfiles\\front_log-2024-12-22.log",
+            "hash": "c926adb03d8b8e7117ea3d4332a55c0da8fdba3de2a7152e183bd569a883ed4f"
+        },
+        {
+            "date": 1734967603658,
+            "name": "logfiles\\front_log-2024-12-24.log",
+            "hash": "2284a06e2dc97f9b153fd9f0203fb1c0bf775ce045ae777b76e31e6402e740f7"
+        },
+        {
+            "date": 1735269876833,
+            "name": "logfiles\\front_log-2024-12-27.log",
+            "hash": "0ae60a79f26baeae3cb0d8b1024465f882d8536ffcd23ef4005c85d92c6f4ff8"
+        },
+        {
+            "date": 1735318874144,
+            "name": "logfiles\\front_log-2024-12-28.log",
+            "hash": "0c857c216a3ec529a2a2fd1b74140f64468dea24199abef997ef706ce23253b2"
+        },
+        {
+            "date": 1735544142793,
+            "name": "logfiles\\front_log-2024-12-30.log",
+            "hash": "07a64b6d5b1565a2da27536e05add7abbb69fdd14a61f4555d61c0fe19d68091"
+        },
+        {
+            "date": 1735574018060,
+            "name": "logfiles\\front_log-2024-12-31.log",
+            "hash": "b68c45caf07a5ec6628470f39402e6f537734ccb668128cb5ebf9460e584506e"
+        },
+        {
+            "date": 1736095600365,
+            "name": "logfiles\\front_log-2025-01-06.log",
+            "hash": "cfec34252a11d7839018fad588dca908fa57cb893d69470f143b3eb15f9f5cdc"
+        },
+        {
+            "date": 1736396940092,
+            "name": "logfiles\\front_log-2025-01-09.log",
+            "hash": "089889c2e04e44631aa4757569239227f7359919cdd535cade004a405dcb0826"
+        }
+    ],
+    "hashType": "sha256"
+}
