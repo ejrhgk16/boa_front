@@ -14,6 +14,7 @@ import Datepicker from "react-tailwindcss-datepicker";
 import Tooltip from "@/components/Tooltip/tooltip";
 import { STORE_STATUS } from "@/constants/codeList";
 import { checkIsExpire } from "@/boaUtil/tokenExpireCheckUtil";
+
 //import { cookies } from "next/headers";
 
 function formatDate(date : any){
@@ -34,9 +35,10 @@ const Page = (props:any) => {
 
   const [roundInfoList, setRoundInfoList] = useState<any[]>([])
   const [selectedRound, setSelectedRound] = useState('all')
-
-
   const [allCheckTF, setAllCheckTF] = useState(false);
+
+  const [statusList, setStatusList] = useState<any[]>([])//(Object.values(STORE_STATUS));
+  const [selectedStatus, setSelectedStatus] = useState('all')
 
   const store_code = props.params.code;
   
@@ -67,6 +69,7 @@ const Page = (props:any) => {
         ...param
 
       }
+      console.log(param)
 
       const res = await fetchToFrontServer.boaGet(targetUrl,param2)
       const result = await res.json()
@@ -88,6 +91,18 @@ const Page = (props:any) => {
       const res = await fetchToFrontServer.boaGet(targetUrl,param)
       const result = await res.json()
       setRoundInfoList(result.data);
+
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+
+    //상태 데이터
+    try {
+      const targetUrl2 = '/api/store/db/manage/status'
+      
+      const res2 = await fetchToFrontServer.boaGet(targetUrl2,param)
+      const result2 = await res2.json()
+      setStatusList(result2.data);
 
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -143,6 +158,7 @@ const onClickAllCheck = () => {
   setCheckList(updatedCheckboxes);
 };
 
+//차수변경
 const onClickRoundChangeButton = async () =>{
   const param = {store_code : store_code, idList:checkList, round_num : selectedRound}
 
@@ -153,6 +169,33 @@ const onClickRoundChangeButton = async () =>{
 
   try {
     const targetUrl = '/api/store/db/manage/round'
+    const res = await fetchToFrontServer.boaPost(targetUrl,param)
+    if(res.ok){
+      alert("변경 완료 :: ")
+      window.location.reload()
+    }else{
+      alert("실패 ::: ")
+    }
+
+
+  } catch (error) {
+    alert("실패 ::: ")
+  }
+
+
+}
+
+//상태변경
+const onClickRoundChangeButton_2 = async () =>{
+  const param = {store_code : store_code, idList:checkList, status : selectedStatus}
+
+  if(selectedStatus == "all" || selectedStatus == null){
+    alert("상태를 선택하세요")
+    return;
+  }
+
+  try {
+    const targetUrl = '/api/store/db/manage/status/update'
     const res = await fetchToFrontServer.boaPost(targetUrl,param)
     if(res.ok){
       alert("변경 완료 :: ")
@@ -202,11 +245,11 @@ const onClickRoundChangeButton = async () =>{
   return (
 
     <DefaultLayout type={'store'}>
-    <Breadcrumb pageName="디비리스트" />
+    <Breadcrumb pageName="디비관리" />
 
     <div className="mb-6">
       <SearchBox fetchData={fetchData} placeholder={"검색어 입력"}
-       param={{...pagingInfo, page_num : null , startDate : formatDate(dateValue.startDate), endDate : formatDate(dateValue.endDate), round_num: selectedRound}}></SearchBox> 
+       param={{...pagingInfo, pageNum : null , startDate : formatDate(dateValue.startDate), endDate : formatDate(dateValue.endDate), round_num: null, status:null}}></SearchBox> 
 
     </div>
 
@@ -238,7 +281,7 @@ const onClickRoundChangeButton = async () =>{
     </select>
   &nbsp;&nbsp;
     <button type="button" className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" 
-      onClick={()=>{fetchData({...pagingInfo, page_num : null, startDate : formatDate(dateValue.startDate), endDate : formatDate(dateValue.endDate), round_num: selectedRound})}}> 조회</button>
+      onClick={()=>{fetchData({...pagingInfo, pageNum : null, keyword:null, startDate : formatDate(dateValue.startDate), endDate : formatDate(dateValue.endDate), round_num: selectedRound, status:null})}}> 차수조회</button>
    
     <button onClick={()=>{{onClickRoundChangeButton()}}} type="button"
      className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" >
@@ -252,10 +295,21 @@ const onClickRoundChangeButton = async () =>{
       };
       const list = encodeURIComponent(JSON.stringify(checkList));
       window.open(process.env.NEXT_PUBLIC_FRONT_DOMAIN+"/store/"+store_code+"/db/manage/delivery?list="+list, '상세페이지', 'width=550,height=400');}} type="button" className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" >DB전달</button>
-{/* 
-    <button type="button" className="text-white bg-blue-700 hover:bg-opacity-90 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={()=>{onClickStatusButton('Y')}}>일괄활성화</button>
-    <button type="button" className="text-white bg-red hover:bg-opacity-90 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-red-300 focus:outline-none dark:focus:ring-blue-800" onClick={()=>{onClickStatusButton('N')}}>일괄비활성화</button>
-    */}
+
+    <br></br>
+
+    <select onChange={(e)=>{setSelectedStatus(e.target.value)}}>
+    <option key={"status all"} value="all">상태전체</option>
+      {statusList?.map((item:any, index:any)=>{
+         return <option key={"status"+index} value={item.status_code}>{item.text+"("+item.count+")"}</option>})
+      }
+    </select> &nbsp;&nbsp;
+    <button type="button" className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" 
+      onClick={()=>{fetchData({...pagingInfo, pageNum : null, keyword:null, startDate : formatDate(dateValue.startDate), endDate : formatDate(dateValue.endDate), round_num:null, status:selectedStatus})}}>상태조회</button>
+   
+    <button type="button" className="text-white bg-blue-700 hover:bg-opacity-90 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" 
+      onClick={()=>{onClickRoundChangeButton_2()}}>일괄상태변경</button>
+
         
     <br></br> 
 
@@ -275,6 +329,9 @@ const onClickRoundChangeButton = async () =>{
                 차수
               </th>
               <th className="min-w-[100px] px-4 py-4 font-medium text-black dark:text-white">
+                상태
+              </th>
+              <th className="min-w-[100px] px-4 py-4 font-medium text-black dark:text-white">
                 이름
               </th>
               <th className="min-w-[100px] px-4 py-4 font-medium text-black dark:text-white">
@@ -292,9 +349,7 @@ const onClickRoundChangeButton = async () =>{
               <th className="min-w-[200px] px-4 py-4 font-medium text-black dark:text-white">
                신청일시
               </th>
-              <th className="min-w-[100px] px-4 py-4 font-medium text-black dark:text-white">
-                상태
-              </th>
+
               <th className="min-w-[100px] px-4 py-4 font-medium text-black dark:text-white">
                매체
               </th>
@@ -334,6 +389,12 @@ const onClickRoundChangeButton = async () =>{
                   <h5 className="text-black dark:text-white">
                     {item.round_num}차               
                   </h5>
+                </td>
+
+                <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                  <p className="text-black dark:text-white">
+                  {item.status ? STORE_STATUS[item.status as keyof typeof STORE_STATUS].text : ''}
+                  </p>
                 </td>
 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark " >
@@ -391,11 +452,6 @@ const onClickRoundChangeButton = async () =>{
                   </p>
                 </td>
 
-                <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                  <p className="text-black dark:text-white">
-                  {item.status ? STORE_STATUS[item.status as keyof typeof STORE_STATUS].text : ''}
-                  </p>
-                </td>
 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
