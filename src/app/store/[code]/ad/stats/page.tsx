@@ -33,6 +33,15 @@ const Page = (props:any) => {
 
   const store_code = props.params.code;
 
+  let today = new Date()
+  let before30day = new Date()
+  before30day.setDate(today.getDate() - 60);
+
+  const [dateValue, setDateValue] = useState({ 
+    startDate: before30day, 
+    endDate: today
+  });
+
 
     // useEffect로 초기 데이터를 fetch
 
@@ -44,21 +53,24 @@ const Page = (props:any) => {
   const fetchdd = async (param={}) => {
     try {
       const targetUrl = '/api/store/ad/stats'
-      const param2 = {...param, store_code : store_code} 
+      const param2 : Record<string,any> = {...param, store_code : store_code} 
       const res = await fetchToFrontServer.boaGet(targetUrl,param2)
       const result = await res.json()
 
       setAllData(result.data.list); // 원본 데이터를 설정
-      setPagingInfo(result.data.paging)
+      const paging = {...result.data.paging, startDate : param2.startDate, endDate:param2.endDate}
+      setPagingInfo(paging)
 
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
 
+  
+
   useEffect(() => {
 
-    fetchData({store_code : store_code});
+    fetchData({store_code : store_code, startDate : formatDate(dateValue.startDate), endDate : formatDate(dateValue.endDate)});
   }, []);
 
 
@@ -69,7 +81,34 @@ const Page = (props:any) => {
     <Breadcrumb pageName="광고현황" />
 
     <div className="mb-6">
-      <SearchBox fetchData={fetchData} placeholder={"검색어 입력"}></SearchBox> 
+
+    <div className="w-full">
+
+      <SearchBox fetchData={fetchData} placeholder={"검색어 입력"} 
+        param={{...pagingInfo, pageNum : null , startDate : formatDate(dateValue.startDate), endDate : formatDate(dateValue.endDate)}}>
+      </SearchBox>
+
+      <br></br>
+
+      </div>
+      <div className="mx-auto flex gap-3">
+        <div className="flex-grow"> 
+          <Datepicker 
+          value={dateValue} 
+          onChange={(newValue:any) => {
+            setDateValue({startDate:newValue.startDate, endDate:newValue.endDate})
+          }}  /> 
+          </div>
+
+          <button type="button" className="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" 
+          onClick={()=>{ fetchData({store_code : store_code, ...pagingInfo, pageNum : null, startDate : formatDate(dateValue.startDate), endDate : formatDate(dateValue.endDate)}) }}>
+            조회</button>
+          
+        </div>
+
+
+
+
 
     </div>
  
@@ -106,6 +145,9 @@ const Page = (props:any) => {
               </th>
               <th className="min-w-[50px] px-4 py-4 font-medium text-black dark:text-white">
                전체등록수
+              </th>
+              <th className="min-w-[50px] px-4 py-4 font-medium text-black dark:text-white">
+               기간등록수
               </th>
               <th className="min-w-[200px] px-4 py-4 font-medium text-black dark:text-white">
                등록일
@@ -197,7 +239,13 @@ const Page = (props:any) => {
 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {item.reg_count}
+                    {item.reg_count_total}
+                  </p>
+                </td>
+
+                <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                  <p className="text-black dark:text-white">
+                    {item.reg_count_period}
                   </p>
                 </td>
 

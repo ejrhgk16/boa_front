@@ -3,7 +3,7 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import fetchToFrontServer from "@/boaUtil/fetchToFrontServer_csr";
-import {formatTimeStamp} from "@/boaUtil/dateUtil";
+import {formatDate, formatTimeStamp} from "@/boaUtil/dateUtil";
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
@@ -14,15 +14,19 @@ import Datepicker from "react-tailwindcss-datepicker";
 import Tooltip from "@/components/Tooltip/tooltip";
 import { STORE_STATUS } from "@/constants/codeList";
 import { checkIsExpire } from "@/boaUtil/tokenExpireCheckUtil";
+import * as XLSX from 'xlsx';
+import useLocalStorage from "@/hooks/useLocalStorage";
+
 
 //import { cookies } from "next/headers";
 
-function formatDate(date : any){
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 월은 0부터 시작하므로 +1
-  const day = date.getDate().toString().padStart(2, '0');
-
-  return year+'/'+month+'/'+day
+function generateExcel(column_name_arr : any, data_arr : any, file_name : any) {
+  const workbook = XLSX.utils.book_new();
+  const ws_data = [column_name_arr].concat(data_arr);
+  console.log(ws_data)
+  const worksheet = XLSX.utils.aoa_to_sheet(ws_data);
+  XLSX.utils.book_append_sheet(workbook, worksheet, '디비리스트');
+  XLSX.writeFile(workbook, file_name+'.xlsx');
 }
 
 
@@ -39,6 +43,8 @@ const Page = (props:any) => {
 
   const [statusList, setStatusList] = useState<any[]>([])//(Object.values(STORE_STATUS));
   const [selectedStatus, setSelectedStatus] = useState('all')
+
+  const [current_store_name, setCurrent_store_name] = useLocalStorage('current_store_name', '');
 
   const store_code = props.params.code;
   
@@ -69,7 +75,6 @@ const Page = (props:any) => {
         ...param
 
       }
-      console.log(param)
 
       const res = await fetchToFrontServer.boaGet(targetUrl,param2)
       const result = await res.json()
@@ -249,52 +254,85 @@ const onClickRoundChangeButton_2 = async () =>{
 
     <div className="mb-6">
       <SearchBox fetchData={fetchData} placeholder={"검색어 입력"}
-       param={{...pagingInfo, pageNum : null , startDate : formatDate(dateValue.startDate), endDate : formatDate(dateValue.endDate), round_num: null, status:null}}></SearchBox> 
+       param={{...pagingInfo, pageNum : null , startDate : formatDate(dateValue.startDate), endDate : formatDate(dateValue.endDate)}}></SearchBox> 
 
     </div>
 
 
     
-    <div className="mx-auto flex gap-6">
-      
+    <div className="gap-3 flex-wrap ">
 
-
-      <div className="flex-grow">  
-        <Datepicker value={dateValue} onChange={(newValue:any) => {
-
-        setDateValue({startDate:newValue.startDate, endDate:newValue.endDate})}}  />
-
+    <div className="flex items-center gap-5">
+      <div className="w-2/3">
+      <Datepicker 
+      value={dateValue} 
+      onChange={(newValue:any) => {
+        setDateValue({startDate:newValue.startDate, endDate:newValue.endDate})
+      }} /> 
       </div>
+
+      <button type="button" className="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" 
+        onClick={()=>{ fetchData({store_code : store_code, ...pagingInfo, pageNum : null, round_num: null, status:null, startDate : formatDate(dateValue.startDate), endDate : formatDate(dateValue.endDate)}) }}>
+          조회</button>
+  
+    <button 
+      onClick={() => {
+        window.open(process.env.NEXT_PUBLIC_FRONT_DOMAIN+"/store/"+store_code+"/db/manage/add", 'DB직접추가', 'width=550,height=600');
+     }} 
+    className="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+  >
+    DB추가
+  </button>
+
+  <button
+    onClick={() => {
+      if(checkList.length == 0){
+        alert("체크박스 선택하세요 ") 
+        return
+      };
+      const list = encodeURIComponent(JSON.stringify(checkList));
+      window.open(process.env.NEXT_PUBLIC_FRONT_DOMAIN+"/store/"+store_code+"/db/manage/delivery?list="+list, '상세페이지', 'width=550,height=400');
+    }}
+    className="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+  >
+    DB전달
+  </button>
+
+  <button
+    onClick={() => {
+      const column_name_arr =  ["고유", "차수", "상태",  "이름", "연락처", "기타", "메모", "랜딩명", "신청일시", "매체", "이벤트", "등록IP"]
+      const data_arr = alldata.filter(obj => obj.status !== '99').map(obj => {
+        const status = obj.status ? STORE_STATUS[obj.status as keyof typeof STORE_STATUS].text : ''
+        return [obj.id, obj.round_num, status, obj.cust_name, obj.cust_phone_number, obj.info_data, obj.memo, obj.page_name, formatTimeStamp(obj.last_update), obj.media_name, obj.event_name, obj.reg_ip]
+      });
+      const excel_name = current_store_name + "_" + pagingInfo.startDate + "~" + pagingInfo.endDate+"("+pagingInfo.pageNum+")"
+      generateExcel(column_name_arr, data_arr, excel_name)
+    }}
+    className="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+  >
+    데이터 엑셀로 다운
+  </button>
+</div>
+
 
 
     </div>
-
-
-
         
     <br></br>
+
     <select onChange={(e)=>{setSelectedRound(e.target.value)}}>
      <option value="all">차수전체</option>
       {roundInfoList?.map((item:any, index:any)=>{
          return <option key={index} value={item.round_num}>{item.round_num == 0 ? "차수없음(" + item.count+")" : item.round_num + "차" +"("+item.count+"/"+item.round_quantity+")"}</option>})
       }  
     </select>
-  &nbsp;&nbsp;
-    <button type="button" className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" 
+  &nbsp;&nbsp;&nbsp;&nbsp;
+    <button type="button" className="py-2.5 px-5 me-2 mb-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" 
       onClick={()=>{fetchData({...pagingInfo, pageNum : null, keyword:null, startDate : formatDate(dateValue.startDate), endDate : formatDate(dateValue.endDate), round_num: selectedRound, status:null})}}> 차수조회</button>
-   
+   &nbsp;
     <button onClick={()=>{{onClickRoundChangeButton()}}} type="button"
-     className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" >
+     className="py-2.5 px-5 me-2 mb-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" >
       차수변경</button>
-
-    <button onClick={()=>{window.open(process.env.NEXT_PUBLIC_FRONT_DOMAIN+"/store/"+store_code+"/db/manage/add", 'DB직접추가', 'width=550,height=600');}} type="button" className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" >DB추가</button>
-    <button onClick={()=>{
-      if(checkList.length == 0){
-        alert("체크박스 선택하세요 ") 
-        return
-      };
-      const list = encodeURIComponent(JSON.stringify(checkList));
-      window.open(process.env.NEXT_PUBLIC_FRONT_DOMAIN+"/store/"+store_code+"/db/manage/delivery?list="+list, '상세페이지', 'width=550,height=400');}} type="button" className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" >DB전달</button>
 
     <br></br>
 
@@ -303,16 +341,16 @@ const onClickRoundChangeButton_2 = async () =>{
       {statusList?.map((item:any, index:any)=>{
          return <option key={"status"+index} value={item.status_code}>{item.text+"("+item.count+")"}</option>})
       }
-    </select> &nbsp;&nbsp;
-    <button type="button" className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" 
+    </select> &nbsp;&nbsp;&nbsp;&nbsp;
+    <button type="button" className="py-2.5 px-5 me-2 mb-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" 
       onClick={()=>{fetchData({...pagingInfo, pageNum : null, keyword:null, startDate : formatDate(dateValue.startDate), endDate : formatDate(dateValue.endDate), round_num:null, status:selectedStatus})}}>상태조회</button>
-   
-    <button type="button" className="text-white bg-blue-700 hover:bg-opacity-90 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" 
-      onClick={()=>{onClickRoundChangeButton_2()}}>일괄상태변경</button>
+   &nbsp;
+    <button type="button" className="py-2.5 px-5 me-2 mb-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" 
+      onClick={()=>{onClickRoundChangeButton_2()}}>상태변경</button>
 
-        
-    <br></br> 
+    <br></br>
 
+ 
     <div className="flex flex-col gap-10 ">
     <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1 ">
       <div className="overflow-y-auto w-full overflow-x-scroll">

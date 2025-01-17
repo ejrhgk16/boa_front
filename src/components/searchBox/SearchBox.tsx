@@ -59,7 +59,8 @@ const SearchBox: React.FC<{fetchData:any, placeholder?:any, param?:any}> = React
         <input
           type="text"
           placeholder={placeholder}
-          className="w-full bg-transparent pl-9 pr-4 font-medium focus:outline-none xl:w-125" onChange={(e)=>{ setSearchTerm(e.target.value)}}
+          className="w-full bg-transparent pl-9 pr-4 font-medium focus:outline-none xl:w-125" 
+          onChange={(e)=>{setSearchTerm(e.target.value)} }
         />
       </div>
        

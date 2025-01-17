@@ -153,16 +153,13 @@ const Page = (props:any) => {
       
     <Breadcrumb pageName="디비리스트" />
 
-    <div className="mb-6">
-      <SearchBox fetchData={fetchData} placeholder={"검색어 입력"} param={{...pagingInfo, page_num : null , startDate : formatDate(dateValue.startDate), endDate : formatDate(dateValue.endDate)}}></SearchBox> 
+    <div className="my-3">
+      <SearchBox fetchData={fetchData} placeholder={"검색어 입력"} 
+      param={{...pagingInfo, pageNum : null , startDate : formatDate(dateValue.startDate), endDate : formatDate(dateValue.endDate)}}></SearchBox> 
 
     </div>
 
-
-    
     <div className="mx-auto flex gap-3">
-      
-
 
       <div className="flex-grow">  
         <Datepicker value={dateValue}  onChange={(newValue:any) => {
@@ -170,7 +167,7 @@ const Page = (props:any) => {
       </div>
 
       <button type="button" className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" 
-      onClick={()=>{ fetchData({store_code : store_code, startDate : formatDate(dateValue.startDate), endDate : formatDate(dateValue.endDate)})}}>
+      onClick={()=>{ fetchData({store_code : store_code, ...pagingInfo, pageNum : null, startDate : formatDate(dateValue.startDate), endDate : formatDate(dateValue.endDate)})}}>
           조회</button>
           <button type="button" className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" 
       onClick={()=>{
@@ -186,9 +183,12 @@ const Page = (props:any) => {
         }}>
           데이터 엑셀로 다운</button>
    
-    
+       
   
     </div>
+
+
+
     <div className="flex flex-col gap-10">
     <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">

@@ -1,3 +1,4 @@
+import { formatDate } from "@/boaUtil/dateUtil"
 import { boaGet_noToken } from "@/boaUtil/fetchToBackServer"
 import Landing from "@/components/landing/landing"
 import { error } from "console"
@@ -46,7 +47,8 @@ export default async function Page({ params }: { params: { store_code: string, p
     throw error("비활성화 이벤트")
   }
 
-  console.log("in event page no cache ::: ")
+  let today = new Date()
+  console.log("in event page no cache ::: " + today)
 
   const qaList : Record<string,any>[] = []
   const subList_1 : Record<string,any>[] = []

@@ -215,8 +215,8 @@ const Landing: React.FC<{contentData:any, pageInfoData:any, scriptList:any, nosc
     
     const cust_phone_number = regInfo.cust_phone_number_1 +''+regInfo.cust_phone_number_2+''+regInfo.cust_phone_number_3
 
-    if(cust_phone_number?.length<10){
-      alert("전화번호를 입력해주세요")
+    if(cust_phone_number?.length != 11){
+      alert("전화번호를 정확히 입력해주세요")
       return
     }
 
