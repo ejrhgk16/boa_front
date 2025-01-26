@@ -58,7 +58,7 @@ const StoreDetail = () => {
 
     const body = {
       ...storeDetail,
-      conn_user_list : connUserList
+      conn_user_list : connUserList,
     }
 
     try {
@@ -184,7 +184,7 @@ const StoreDetail = () => {
 
 
                 <SelectOption subject={"클라이언트 종류"} optionList={clientTypeList} selectedValue={''} selectFnc={selectOptionClientType} key={"clientTypeSelect"} />
-
+                <br></br>
                 <div className="mb-6">
                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                     연결 계정 목록
@@ -209,6 +209,20 @@ const StoreDetail = () => {
                   </div>
  
                 </div>
+
+                <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                  <div className="w-full xl:w-1/2">
+                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                      디비 유입시 알림 전송할 연락처 &nbsp;&nbsp; <span className="text-sm text-body"> ** 연락처 여러개 전송할경우 , 붙여서 추가 - 공백없이</span> 
+                    </label>
+                    <input
+                      type="text" onChange={(e)=>{onChangeValue("send_phone_number", e.target.value)}}
+                      placeholder="Enter"
+                      className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                    />
+                  </div>
+                </div>
+
 
                 {/* <div className="mb-6">
                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">

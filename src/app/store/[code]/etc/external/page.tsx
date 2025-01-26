@@ -99,7 +99,7 @@ const  Page = (props : any) => {
 
 
     <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-      <>예시 : https://example.co.kr/event/exex?name=[cust_name]&hp=[cust_phone_number]&time=[time]&qestions=[info_data]&domains=domaintest12&dentist=412</>
+      <>예시 : https://example.com/exec?등록일=[time]&이름=[cust_name]&연락처=[cust_phone_number]&희망차종=[q0]&개월수=[q1]</>
       <br></br><br></br><br></br>
 
       <div className="">

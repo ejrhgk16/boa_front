@@ -6,21 +6,6 @@
     "auditLog": "logfiles\\.a5dcde30d37cf5eb00c6b692bef478fee8378964-audit.json",
     "files": [
         {
-            "date": 1733126756997,
-            "name": "logfiles\\front_log-2024-12-02.log",
-            "hash": "5d8e0d02431dfa649638f165be422c6faa5ee55b9c45e8690a8e33813557fc48"
-        },
-        {
-            "date": 1733166120684,
-            "name": "logfiles\\front_log-2024-12-03.log",
-            "hash": "384bb5fbf3a94b740e02ccd9b4e0bc1795f3552e7c3edf6cb01d595e87b73c51"
-        },
-        {
-            "date": 1733248852993,
-            "name": "logfiles\\front_log-2024-12-04.log",
-            "hash": "52bc8739d07afbd3aca246af8857cee21fbe5c1758260d669438f1adff774222"
-        },
-        {
             "date": 1733326869707,
             "name": "logfiles\\front_log-2024-12-05.log",
             "hash": "78b273905f72ce463f176e7164662062e40a552310497d302fa82380ed1e183e"
@@ -139,6 +124,36 @@
             "date": 1737042649287,
             "name": "logfiles\\front_log-2025-01-17.log",
             "hash": "33d3c4c2e9d84cba69ecaae51c7b891fef41eab4c977b324fc5b6bc21192aa21"
+        },
+        {
+            "date": 1737138989742,
+            "name": "logfiles\\front_log-2025-01-18.log",
+            "hash": "f4ec288fb35ef2ef9033fd35bd6bb1b9533a6e3f13c83235ba6590406872a5d7"
+        },
+        {
+            "date": 1737274052303,
+            "name": "logfiles\\front_log-2025-01-19.log",
+            "hash": "06364d970e25787db746dfce438951503e8e6f2843df0f61d66e5837b5254c3c"
+        },
+        {
+            "date": 1737440594582,
+            "name": "logfiles\\front_log-2025-01-21.log",
+            "hash": "f11ccf20b4d2b05cc96c57676275e044c36d2b91a734eb8caccc8b13238d1919"
+        },
+        {
+            "date": 1737477056553,
+            "name": "logfiles\\front_log-2025-01-22.log",
+            "hash": "0b68ace44f57e12b5143ca0cd6d7bdf83295f1591cd453b34f5cd27ec6cc03ed"
+        },
+        {
+            "date": 1737624885736,
+            "name": "logfiles\\front_log-2025-01-23.log",
+            "hash": "3db4b46a808538c0af0dbd79e69accac022931b622192a5580b69eb079466ebd"
+        },
+        {
+            "date": 1737878053365,
+            "name": "logfiles\\front_log-2025-01-26.log",
+            "hash": "7d2cc987f877008e561c200f4653e22af9787468ea640b5f703f500f1926f9f9"
         }
     ],
     "hashType": "sha256"

@@ -99,15 +99,30 @@ const Page = (props:any) => {
                 
                 <div className="mb-6">
                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                    메모
+                    기타
                   </label>
                   <textarea
                     rows={6}
                     defaultValue={custDetail.memo}
-                    onChange={(e)=>{onChangeValue("memo", e.target.value)}}
-                    placeholder="메모를 입력하세요"
+                    onChange={(e)=>{onChangeValue("info_data", e.target.value)}}
+                    placeholder="info_data"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   ></textarea>
+                </div>
+
+                
+                <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                  <div className="w-full xl:w-1/2">
+                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                      랜딩 코드
+                    </label>
+                    <input
+                      type="text" 
+                      placeholder="Enter"
+                      className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      onChange={(e)=>{onChangeValue("page_code", e.target.value)}}
+                    />
+                  </div>
                 </div>
 
 

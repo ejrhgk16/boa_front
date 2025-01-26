@@ -146,22 +146,22 @@ const ChartOne: React.FC<{store_code:any}> = ({store_code}) => {
         
         let max = Math.ceil(result.data.max / 10) * 10;
 
-        if(max > 10 ) max = 50
-        if(max > 50) max = 100
-        if(max > 100) max = 500
+        if(max > 10 && max <= 50) max = 50
+        if(max > 50 && max <= 100) max = 100
+        if(max > 100 && max <= 500) max = 500
         if(max > 500) max = 1000
 
-        setOptions({ ...options,
+        setOptions((prevOptions) => ({
+          ...prevOptions,
           xaxis: {
-              ...options.xaxis,
-              categories: result.data.dateList 
-            
-            },
-            yaxis:{
-              ...options.yaxis,
-              max:max
-            }
-          })
+            ...prevOptions.xaxis,
+            categories: result.data.dateList,
+          },
+          yaxis: {
+            ...prevOptions.yaxis,
+            max: max,
+          },
+        }));
 
         setChartData(result.data);
 
@@ -173,7 +173,7 @@ const ChartOne: React.FC<{store_code:any}> = ({store_code}) => {
   
   const [chartData, setChartData] = useState<Record<string,any>>({dateList : [], dataList : []})
 
-  const [selectedType, setSelectedType] = useState('week')
+  const [selectedType, setSelectedType] = useState('day')
   const [options, setOptions] = useState<Record<string, any>>(options2)
 
 
@@ -182,7 +182,7 @@ const ChartOne: React.FC<{store_code:any}> = ({store_code}) => {
     setSelectedType(type)
   }
 
-  useEffect(()=>{fetchData({type:selectedType, store_code:store_code})},[])
+  // useEffect(()=>{fetchData({type:selectedType, store_code:store_code})},[])
 
   
 
@@ -205,6 +205,11 @@ const ChartOne: React.FC<{store_code:any}> = ({store_code}) => {
         </div>
         <div className="flex w-full max-w-45 justify-end">
           <div className="inline-flex items-center rounded-md bg-whiter p-1.5 dark:bg-meta-4">
+            <button onClick={()=>{onClickTypeButton('day')}} className={selectedType=="day"?
+            "rounded bg-white px-3 py-1 text-xs font-medium text-black shadow-card hover:bg-white hover:shadow-card dark:bg-boxdark dark:text-white dark:hover:bg-boxdark":
+            "rounded px-3 py-1 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark" }>
+              Day
+            </button>
             <button onClick={()=>{onClickTypeButton('week')}} className={selectedType=="week"?
             "rounded bg-white px-3 py-1 text-xs font-medium text-black shadow-card hover:bg-white hover:shadow-card dark:bg-boxdark dark:text-white dark:hover:bg-boxdark":
             "rounded px-3 py-1 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark" }>

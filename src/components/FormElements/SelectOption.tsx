@@ -41,7 +41,7 @@ const SelectOption: React.FC<{subject:any, optionList:any, selectedValue:any ,se
             
             changeTextColor();
 
-            if(keyName){
+            if(keyName !== null && keyName !== undefined){
               selectFnc(keyName, e.target.value)
             }
             else{

@@ -16,6 +16,7 @@ import Tooltip from "@/components/Tooltip/tooltip";
 import { STORE_STATUS } from "@/constants/codeList";
 import * as XLSX from 'xlsx';
 import useLocalStorage from "@/hooks/useLocalStorage";
+import {useReactTable,getCoreRowModel,getSortedRowModel,SortingState,flexRender,} from '@tanstack/react-table'
 //import { cookies } from "next/headers";
 
 function formatDate(date : any){
@@ -44,6 +45,72 @@ const Page = (props:any) => {
   const [checkList, setCheckList] = useState<any[]>([]); // 초기 전체 데이터
   const [current_store_name, setCurrent_store_name] = useLocalStorage('current_store_name', '');
 
+  const [sorting, setSorting] = useState<SortingState>([])
+  const columns = [
+    {
+      accessorKey: 'id',
+      header: '고유',
+      size : 100
+    },
+    {
+      accessorKey: 'cust_name',
+      header: '이름',
+      size : 150
+    },
+    {
+      accessorKey: 'cust_phone_number',
+      header: '연락처',
+      size : 100
+    },
+    {
+      accessorKey: 'cust_age',
+      header: '나이',
+      size : 100
+    },
+    {
+      accessorKey: 'info_data',
+      header: '기타',
+      size : 200
+    },
+    {
+      accessorKey: 'memo',
+      header: '메모',
+      size : 200
+    },
+    {
+      accessorKey: 'last_update',
+      header: '신청일시',
+      size : 200
+    },
+    {
+      accessorKey: 'status',
+      header: '상태',
+      size : 100
+    },
+    {
+      accessorKey: 'media_name',
+      header: '매체',
+      size : 100
+    },
+    {
+      accessorKey: 'event_name',
+      header: '이벤트',
+      size : 200
+    },
+    
+  ]
+
+  const table = useReactTable({
+    data: alldata,
+    columns,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    columnResizeMode: 'onChange', // 열 크기 조정 모드 추가
+  })
   
   const store_code = props.params.code;
   
@@ -171,10 +238,10 @@ const Page = (props:any) => {
           조회</button>
           <button type="button" className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" 
       onClick={()=>{
-          const column_name_arr =  ["고유", "이름", "연락처", "기타", "메모", "신청일시", "상태", "매체", "이벤트"]
+          const column_name_arr =  ["고유", "이름", "연락처","나이", "기타", "메모", "신청일시", "상태", "매체", "이벤트"]
           const data_arr = alldata.map(obj => {
             const status = obj.status ? STORE_STATUS[obj.status as keyof typeof STORE_STATUS].text : ''
-            return [obj.id, obj.cust_name, obj.cust_phone_number, obj.info_data, obj.memo, formatTimeStamp(obj.last_update), status, obj.media_name, obj.event_name]
+            return [obj.id, obj.cust_name, obj.cust_phone_number, obj.cust_age, obj.info_data, obj.memo, formatTimeStamp(obj.last_update), status, obj.media_name, obj.event_name]
           
           });
 
@@ -195,42 +262,27 @@ const Page = (props:any) => {
         <table className="w-full table-auto">
           <thead>
             <tr className="bg-gray-2 text-center dark:bg-meta-4">
-              {/* <th className="min-w-[15px] px-4 py-4 font-medium text-black dark:text-white">
+
+              {columns.map((column:any) => (
+                <th
+                  key={column.accessorKey}
+                  className={"min-w-["+column.size+"px] px-4 py-4 font-medium text-black dark:text-white cursor-pointer"}
+                  onClick={() => table?.getColumn(column.accessorKey)?.toggleSorting()}
                 
-              </th> */}
-              <th className="min-w-[15px] px-4 py-4 font-medium text-black dark:text-white">
-                고유
-              </th>
-              <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
-                이름
-              </th>
-              <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
-                연락처
-              </th>
-              <th className="min-w-[200px] px-4 py-4 font-medium text-black dark:text-white">
-                기타
-              </th>
-              <th className="min-w-[200px] px-4 py-4 font-medium text-black dark:text-white">
-                메모
-              </th>
-              <th className="min-w-[200px] px-4 py-4 font-medium text-black dark:text-white">
-               신청일시
-              </th>
-              <th className="min-w-[50px] px-4 py-4 font-medium text-black dark:text-white">
-                상태
-              </th>
-              <th className="min-w-[50px] px-4 py-4 font-medium text-black dark:text-white">
-               매체
-              </th>
-              <th className="min-w-[50px] px-4 py-4 font-medium text-black dark:text-white">
-               이벤트
-              </th>
+                >
+                  {column.header}
+                  {{
+                    asc: ' 🔼',
+                    desc: ' 🔽',
+                  }[table?.getColumn(column.accessorKey)?.getIsSorted() as string] ?? null}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {alldata?.map((item, key) => (
+            {table.getRowModel()?.rows?.map((row, key) => (
               <tr key={key} className="text-center hover:bg-slate-100" 
-              onDoubleClick={()=>{window.open(process.env.NEXT_PUBLIC_FRONT_DOMAIN+"/store/"+store_code+"/db/list/detail?id="+item.id, '상세페이지', 'width=550,height=700')}}>
+              onDoubleClick={()=>{window.open(process.env.NEXT_PUBLIC_FRONT_DOMAIN+"/store/"+store_code+"/db/list/detail?id="+row.original.id, '상세페이지', 'width=550,height=700')}}>
                 {/* <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark text-center">
                   <input type="checkbox" style={{zoom:1.5}} checked={checkList?.includes(item.store_code)} onChange={(e)=>{checkboxChange(e.target.checked, item.store_code)}}></input>
 
@@ -246,28 +298,34 @@ const Page = (props:any) => {
                     }}>
                       {item.pageName}
                     </Link> */}
-                    {item.id}                
+                    {row.original.id}                
                   </h5>
                 </td>
 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark " >
                   <h5 className="text-black dark:text-white">
-                    {item.cust_name}
+                    {row.original.cust_name}
                   </h5>
                 </td>
                 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {item.cust_phone_number}
+                    {row.original.cust_phone_number}
+                  </p>
+                </td>
+
+                <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                  <p className="text-black dark:text-white">
+                    {row.original.cust_age}
                   </p>
                 </td>
 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
 
-                  {item.info_data ? <Tooltip message={item.info_data}>
+                  {row.original.info_data ? <Tooltip message={row.original.info_data}>
                     <h5 className="text-black dark:text-white">
                       
-                        {item.info_data.length > 20 ? item.info_data.substring(0, 15) + '...' : item.info_data}
+                        {row.original.info_data.length > 20 ? row.original.info_data.substring(0, 15) + '...' : row.original.info_data}
                      
                     </h5>
                     </Tooltip>
@@ -279,10 +337,10 @@ const Page = (props:any) => {
 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
 
-                  {item.memo ? <Tooltip message={item.memo}>
+                  {row.original.memo ? <Tooltip message={row.original.memo}>
                     <h5 className="text-black dark:text-white">
                       
-                        {item.memo.length > 20 ? item.memo.substring(0, 15) + '...' : item.memo}
+                        {row.original.memo.length > 20 ? row.original.memo.substring(0, 15) + '...' : row.original.memo}
                      
                     </h5>
                     </Tooltip>
@@ -295,25 +353,25 @@ const Page = (props:any) => {
 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {formatTimeStamp(item.last_update)}
+                    {formatTimeStamp(row.original.last_update)}
                   </p>
                 </td>
 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {item.status ? STORE_STATUS[item.status as keyof typeof STORE_STATUS].text : ''}
+                    {row.original.status ? STORE_STATUS[row.original.status as keyof typeof STORE_STATUS].text : ''}
                   </p>
                 </td>
 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {item.media_name}
+                    {row.original.media_name}
                   </p>
                 </td>
 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {item.event_name}
+                    {row.original.event_name}
                   </p>
                 </td>
 

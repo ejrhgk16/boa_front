@@ -104,7 +104,7 @@ const ClientStorePage = () => {
         
     <br></br>
 
-    <button type="button" className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" onClick={()=>{window.open(process.env.NEXT_PUBLIC_FRONT_DOMAIN+"/boa/client/store/add", '상세페이지', 'width=550,height=700');}}>추가</button>
+    <button type="button" className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" onClick={()=>{window.open(process.env.NEXT_PUBLIC_FRONT_DOMAIN+"/boa/client/store/add", '상세페이지', 'width=590,height=700');}}>추가</button>
     <button type="button" className="text-white bg-blue-700 hover:bg-opacity-90 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={()=>{onClickStatusButton('Y')}}>일괄활성화</button>
     <button type="button" className="text-white bg-red hover:bg-opacity-90 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-red-300 focus:outline-none dark:focus:ring-blue-800" onClick={()=>{onClickStatusButton('N')}}>일괄비활성화</button>
 
@@ -152,7 +152,7 @@ const ClientStorePage = () => {
                     <Link href={process.env.NEXT_PUBLIC_FRONT_DOMAIN+"/boa/client/store/detail?store_code="+item.store_code} rel="noopener noreferrer" target="_blank" className="hover:underline" onClick={(e)=>{
                       e.preventDefault();
                       const target = e.target as HTMLAnchorElement
-                      window.open(target.href, '상세페이지', 'width=550,height=700');
+                      window.open(target.href, '상세페이지', 'width=590,height=700');
                       
                     }}>
                       {item.store_code}

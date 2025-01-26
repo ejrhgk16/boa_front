@@ -16,6 +16,7 @@ import { STORE_STATUS } from "@/constants/codeList";
 import { checkIsExpire } from "@/boaUtil/tokenExpireCheckUtil";
 import * as XLSX from 'xlsx';
 import useLocalStorage from "@/hooks/useLocalStorage";
+import {useReactTable,getCoreRowModel,getSortedRowModel,SortingState,flexRender,} from '@tanstack/react-table'
 
 
 //import { cookies } from "next/headers";
@@ -45,6 +46,89 @@ const Page = (props:any) => {
   const [selectedStatus, setSelectedStatus] = useState('all')
 
   const [current_store_name, setCurrent_store_name] = useLocalStorage('current_store_name', '');
+
+  const [sorting, setSorting] = useState<SortingState>([])
+  
+  const columns = [
+    {
+      accessorKey: 'id',
+      header: '고유',
+      size : 100
+    },
+    {
+      accessorKey: 'round_num',
+      header: '차수',
+      size : 100
+    },
+    {
+      accessorKey: 'status',
+      header: '상태',
+      size : 100
+    },
+    {
+      accessorKey: 'cust_name',
+      header: '이름',
+      size : 150
+    },
+    {
+      accessorKey: 'cust_phone_number',
+      header: '연락처',
+      size : 100
+    },
+    {
+      accessorKey: 'cust_age',
+      header: '나이',
+      size : 100
+    },
+    {
+      accessorKey: 'info_data',
+      header: '기타',
+      size : 200
+    },
+    {
+      accessorKey: 'memo',
+      header: '메모',
+      size : 200
+    },
+    {
+      accessorKey: 'page_name',
+      header: '랜딩명',
+      size : 200
+    },
+    {
+      accessorKey: 'last_update',
+      header: '신청일시',
+      size : 200
+    },
+    {
+      accessorKey: 'media_name',
+      header: '매체',
+      size : 100
+    },
+    {
+      accessorKey: 'event_name',
+      header: '이벤트',
+      size : 200
+    },
+    {
+      accessorKey: 'reg_ip',
+      header: '등록IP',
+      size : 200
+    },
+    
+  ]
+
+  const table = useReactTable({
+    data: alldata,
+    columns,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    columnResizeMode: 'onChange', // 열 크기 조정 모드 추가
+  })
 
   const store_code = props.params.code;
   
@@ -355,7 +439,7 @@ const onClickRoundChangeButton_2 = async () =>{
     <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1 ">
       <div className="overflow-y-auto w-full overflow-x-scroll">
         <table className="w-full min-w-[1200px]">
-          <thead>
+          {/* <thead>
             <tr className="bg-gray-2 text-center dark:bg-meta-4">
               <th className="min-w-[100px] px-4 py-4 font-medium text-c-blue hover:text-c-blue-2 dark:text-white focus:cursor-auto cursor-pointer">
                 <p className="" onClick={()=>{onClickAllCheck()}}>{"[전체선택]"}</p>
@@ -398,13 +482,35 @@ const onClickRoundChangeButton_2 = async () =>{
                등록IP
               </th>
             </tr>
+          </thead> */}
+          <thead>
+            <tr className="bg-gray-2 text-center dark:bg-meta-4">
+              <th className="min-w-[100px] px-4 py-4 font-medium text-c-blue hover:text-c-blue-2 dark:text-white focus:cursor-auto cursor-pointer">
+                  <p className="" onClick={()=>{onClickAllCheck()}}>{"[전체선택]"}</p>
+              </th>
+              {columns.map((column:any) => (
+                <th
+                  key={column.accessorKey}
+                  className={"min-w-["+column.size+"px] px-4 py-4 font-medium text-black dark:text-white cursor-pointer"}
+                  onClick={() => table?.getColumn(column.accessorKey)?.toggleSorting()}
+                
+                >
+                  {column.header}
+                  {{
+                    asc: ' 🔼',
+                    desc: ' 🔽',
+                  }[table?.getColumn(column.accessorKey)?.getIsSorted() as string] ?? null}
+                </th>
+              ))}
+            </tr>
           </thead>
           <tbody>
-            {alldata?.map((item, key) => (
+            {table.getRowModel()?.rows?.map((row, key) => (
+        
               <tr key={key} className="text-center hover:bg-slate-100" 
-              onDoubleClick={()=>{window.open(process.env.NEXT_PUBLIC_FRONT_DOMAIN+"/store/"+store_code+"/db/list/detail?id="+item.id, '상세페이지', 'width=550,height=580')}}>
+              onDoubleClick={()=>{window.open(process.env.NEXT_PUBLIC_FRONT_DOMAIN+"/store/"+store_code+"/db/list/detail?id="+row.original.id, '상세페이지', 'width=550,height=580')}}>
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark text-center" onDoubleClick={(e)=>{e.stopPropagation()}} >
-                  <input key={key+100} type="checkbox" style={{zoom:1.5}} checked={checkList?.includes(item.id)} onChange={(e)=>{checkboxChange(e.target.checked, item.id)}}></input>
+                  <input key={key+100} type="checkbox" style={{zoom:1.5}} checked={checkList?.includes(row.original.id)} onChange={(e)=>{checkboxChange(e.target.checked, row.original.id)}}></input>
 
                 </td>
                 
@@ -419,40 +525,46 @@ const onClickRoundChangeButton_2 = async () =>{
                     }}>
                       {item.pageName}
                     </Link> */}
-                    {item.id}                
+                    {row.original.id}                
                   </h5>
                 </td>
 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark text-center" >
                   <h5 className="text-black dark:text-white">
-                    {item.round_num}차               
+                    {row.original.round_num}차               
                   </h5>
                 </td>
 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                  {item.status ? STORE_STATUS[item.status as keyof typeof STORE_STATUS].text : ''}
+                  {row.original.status ? STORE_STATUS[row.original.status as keyof typeof STORE_STATUS].text : ''}
                   </p>
                 </td>
 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark " >
                   <h5 className="text-black dark:text-white">
-                    {item.cust_name}
+                    {row.original.cust_name}
                   </h5>
                 </td>
                 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {item.cust_phone_number}
+                    {row.original.cust_phone_number}
+                  </p>
+                </td>
+
+                <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                  <p className="text-black dark:text-white">
+                    {row.original.cust_age}
                   </p>
                 </td>
 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
 
-                  {item.info_data ? <Tooltip message={item.info_data}>
+                  {row.original.info_data ? <Tooltip message={row.original.info_data}>
                     <h5 className="text-black dark:text-white">
                       
-                        {item.info_data.length > 20 ? item.info_data.substring(0, 15) + '...' : item.info_data}
+                        {row.original.info_data.length > 20 ? row.original.info_data.substring(0, 15) + '...' : row.original.info_data}
                      
                     </h5>
                     </Tooltip>
@@ -464,10 +576,10 @@ const onClickRoundChangeButton_2 = async () =>{
 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
 
-                  {item.memo ? <Tooltip message={item.memo}>
+                  {row.original.memo ? <Tooltip message={row.original.memo}>
                     <h5 className="text-black dark:text-white">
                       
-                        {item.memo.length > 20 ? item.memo.substring(0, 15) + '...' : item.memo}
+                        {row.original.memo.length > 20 ? row.original.memo.substring(0, 15) + '...' : row.original.memo}
                      
                     </h5>
                     </Tooltip>
@@ -479,33 +591,33 @@ const onClickRoundChangeButton_2 = async () =>{
 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {item.page_name}
+                    {row.original.page_name}
                   </p>
                 </td>
                 
 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {formatTimeStamp(item.last_update)}
+                    {formatTimeStamp(row.original.last_update)}
                   </p>
                 </td>
 
 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {item.media_name}
+                    {row.original.media_name}
                   </p>
                 </td>
 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {item.event_name}
+                    {row.original.event_name}
                   </p>
                 </td>
 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {item.reg_ip}
+                    {row.original.reg_ip}
                   </p>
                 </td>
 

@@ -187,6 +187,11 @@ const Landing: React.FC<{contentData:any, pageInfoData:any, scriptList:any, nosc
       return
     }
 
+    if(pageInfoData.ageYN == "Y" && !regInfo.cust_age){
+      alert("나이를 입력해주세요")
+      return
+    }
+
 
 
     const targetUrl = "/api/landing/add"
@@ -196,10 +201,11 @@ const Landing: React.FC<{contentData:any, pageInfoData:any, scriptList:any, nosc
     for(const item of qaList){
       const temp : Record<string,any> = {}
       temp.q = item.content_text
+      temp.a = null
 
       if(item?.aList?.length > 0){
         const tempA = item.aList[item.selectedANumber]
-        temp.a = tempA.content_text
+        temp.a = tempA?.content_text
       }else{//주관식
         temp.a = item.a
       }
@@ -274,6 +280,13 @@ const Landing: React.FC<{contentData:any, pageInfoData:any, scriptList:any, nosc
       paramString = paramString.replaceAll("[cust_name]", regInfo.cust_name)
       paramString = paramString.replaceAll("[cust_age]", regInfo.cust_age)
       paramString = paramString.replaceAll("[cust_phone_number]", cust_phone_number)
+
+      selectedQa.forEach((element : any, index:any) => {
+        const tempKey = "q"+index
+        const tempValue = element.a
+        paramString = paramString.replaceAll(`[${tempKey}]`, tempValue)
+      }); 
+
       paramString = paramString.replaceAll("[info_data]", body.info_data)
       //selectedQa로 q별로 컬럼 다르게 넣을수있게 수정요청
       
@@ -311,7 +324,7 @@ const Landing: React.FC<{contentData:any, pageInfoData:any, scriptList:any, nosc
         // }
         // fetch(targetUrl2, option);
 
-        fetchToFrontServer_csr.boaPost("/api/common/google/excel", body2)
+        fetchToFrontServer_csr.boaPost("/api/common/google/excel", body2)//엑셀 외에도 외부api
 
       } catch (error) {
         console.log(error)

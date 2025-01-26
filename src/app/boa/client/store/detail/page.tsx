@@ -20,7 +20,9 @@ const StoreDetail = () => {
 
  
 
-  const [storeDetail, setStoreDetail] = useState<any>({}); 
+  const [storeDetail, setStoreDetail] = useState<any>({
+    send_phone_number : null
+  }); 
   const [connUserList, setConnUserList] = useState<any[]>([]); 
   const [clientTypeList, setClientTypeList] = useState<any[]>([]);
   const [statusList, setStatusList] = useState<any[]>([{value:'Y', text:'활성화'}, {value:'N', text:'비활성화'}]);
@@ -227,6 +229,21 @@ const StoreDetail = () => {
 
                   </div>
  
+                </div>
+
+                <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                  <div className="w-full xl:w-1/2">
+                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                      디비 유입시 알림 전송할 연락처 &nbsp;&nbsp; <span className="text-sm text-body"> ** 연락처 여러개 전송할경우 , 붙여서 추가 - 공백없이</span> 
+                    </label>
+                    <input
+                      type="text" 
+                      defaultValue={storeDetail.send_phone_number}
+                      onChange={(e)=>{onChangeValue("send_phone_number", e.target.value)}}
+                      placeholder="Enter"
+                      className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                    />
+                  </div>
                 </div>
 
                 {/* <div className="mb-6">

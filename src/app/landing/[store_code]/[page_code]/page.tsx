@@ -78,7 +78,7 @@ export default async function Page({ params }: { params: { store_code: string, p
     if(item.content_type == "q"){
       const content_name_Arr= item.content_name.split("_");
       const qNumber = parseInt(content_name_Arr[1])
-      const qTemp = {...item, text:item.content_text, fileName:item.content_img_name, qNumber:qNumber, isAImg : true, selectedANumber : 0, aList:[]}
+      const qTemp = {...item, text:item.content_text, fileName:item.content_img_name, qNumber:qNumber, isAImg : true, selectedANumber : null, aList:[]}
       qaList.push(qTemp)
     }
 

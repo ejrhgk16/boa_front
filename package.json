@@ -12,6 +12,7 @@
     "@heroicons/react": "^2.1.5",
     "@nestjs/platform-express": "^10.4.5",
     "@nextui-org/date-picker": "^2.1.8",
+    "@tanstack/react-table": "^8.20.6",
     "apexcharts": "^3.45.2",
     "axios": "^1.7.2",
     "cookies-next": "^4.2.1",

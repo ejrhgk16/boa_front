@@ -1164,20 +1164,27 @@ const Page = (props:any) => {
             </div>
 
                 <br></br>
-
+              <span className="mb-3 block text-sm font-medium text-black dark:text-white">활성화여부</span>
               <SelectOption subject={"활성화"} optionList={statusList} selectedValue={pageDetail.status} selectFnc={selectOption} keyName={"status"} key={"statustTypeSelect"}/>
               <br></br>
+              <span className="mb-3 block text-sm font-medium text-black dark:text-white">이벤트</span>
               <SelectOption subject={"이벤트"} optionList={eventList} selectedValue={pageDetail.event_num} selectFnc={selectOption} keyName={"event_num"} key={"clientTypeSelect"}/>
               <br></br>
+              <span className="mb-3 block text-sm font-medium text-black dark:text-white">매체</span>
               <SelectOption subject={"매체"} optionList={mediaList} selectedValue={pageDetail.media_id} selectFnc={selectOption}keyName={"media_id"} key={"mediaTypeSelect"}/>
               <br></br>
               {/* <SelectOption subject={"스크립트"} optionList={scriptList} selectedValue={pageDetail.script_num} selectFnc={selectOption} keyName={"script_num"} key={"scriptSelect"}/> */}
+              <span className="mb-3 block text-sm font-medium text-black dark:text-white">개인정보취급방침</span>
+
               <SelectOption subject={"개인정보취급방침"} optionList={privacyList} selectedValue={pageDetail.privacy_num} selectFnc={selectOption} keyName={"privacy_num"} key={"privacySelect"}/>
               <br></br>
+              <span className="mb-3 block text-sm font-medium text-black dark:text-white">외부api</span>
               <SelectOption subject={"외부api"} optionList={apiList} selectedValue={pageDetail.api_num} selectFnc={selectOption} keyName={"api_num"} key={"apiSelect"}/>
               <br></br>
+              <span className="mb-3 block text-sm font-medium text-black dark:text-white">개인정보 이용동의 디폴트 체크 여부</span>
               <SelectOption subject={"개인정보 이용동의 디폴트 체크 여부"} optionList={privacy01checkYNList} selectedValue={pageDetail.privacy01checkYN} selectFnc={selectOption} keyName={"privacy01checkYN"} key={"privacy01checkYNSelect"}/>
               <br></br>
+              <span className="mb-3 block text-sm font-medium text-black dark:text-white">전화수신 동의 디폴트 체크 여부</span>
               <SelectOption subject={"전화수신 동의 디폴트 체크 여부"} optionList={privacy02checkYNList} selectedValue={pageDetail.privacy02checkYN} selectFnc={selectOption} keyName={"privacy02checkYN"} key={"privacy02checkYNSelect"}/>
               <br></br>
 
@@ -1254,7 +1261,7 @@ const Page = (props:any) => {
                   </div>
 
               </div> */}
-
+              <span className="mb-3 block text-sm font-medium text-black dark:text-white">나이입력 활성화 여부</span>
               <SelectOption subject={"나이입력 활성화 여부"} optionList={ageYNList} selectedValue={pageDetail.ageYN} selectFnc={selectOption} keyName={"ageYN"} key={"ageSelect"}/>
               <br></br>
 
@@ -1276,7 +1283,7 @@ const Page = (props:any) => {
                 <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                   <div className="w-full xl:w-1/2">
                     <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                      차단 키워드 &nbsp;&nbsp; <span className="text-sm text-body"> ** 여러개 차단 하는 경우 , 붙여서 추가하면됨</span> 
+                      차단 키워드 &nbsp;&nbsp; <span className="text-sm text-body"> ** 여러개 차단 하는 경우 , 붙여서 추가하면됨 - 공백없이</span> 
                     </label>
                     <input
                       type="text" 
