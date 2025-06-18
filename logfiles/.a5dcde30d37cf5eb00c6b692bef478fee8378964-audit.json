@@ -6,21 +6,6 @@
     "auditLog": "logfiles\\.a5dcde30d37cf5eb00c6b692bef478fee8378964-audit.json",
     "files": [
         {
-            "date": 1733326869707,
-            "name": "logfiles\\front_log-2024-12-05.log",
-            "hash": "78b273905f72ce463f176e7164662062e40a552310497d302fa82380ed1e183e"
-        },
-        {
-            "date": 1733419589777,
-            "name": "logfiles\\front_log-2024-12-06.log",
-            "hash": "76e576f8909f441677cc54bd673141079cb553efeef690c69d5004dc39ee79a3"
-        },
-        {
-            "date": 1733508409573,
-            "name": "logfiles\\front_log-2024-12-07.log",
-            "hash": "952ad6a322c206b44fb323cbd4a69ce254ead2d38d087d24ab81e4a0bb3ba11d"
-        },
-        {
             "date": 1733586121141,
             "name": "logfiles\\front_log-2024-12-08.log",
             "hash": "e900542863dd4fa2fa1a0c21bc3d8ada00404d44dd2a6ba484b1dc1ab1b27cd6"
@@ -154,6 +139,21 @@
             "date": 1737878053365,
             "name": "logfiles\\front_log-2025-01-26.log",
             "hash": "7d2cc987f877008e561c200f4653e22af9787468ea640b5f703f500f1926f9f9"
+        },
+        {
+            "date": 1742796282634,
+            "name": "logfiles\\front_log-2025-03-24.log",
+            "hash": "f69d13430f5dd9876bcd3f4f9bf2e64a9356ac91721bd825edf72f3c4ed1694b"
+        },
+        {
+            "date": 1750182315009,
+            "name": "logfiles\\front_log-2025-06-18.log",
+            "hash": "d2187797d0a9edb941b5832412b998f3364e15fec3c59886bf1bcdc66ae9b6e1"
+        },
+        {
+            "date": 1750259449473,
+            "name": "logfiles\\front_log-2025-06-19.log",
+            "hash": "1c7da62b31adc2e89bdb3773b22247eb3b7d35d7669f15045950b0e00865d24f"
         }
     ],
     "hashType": "sha256"

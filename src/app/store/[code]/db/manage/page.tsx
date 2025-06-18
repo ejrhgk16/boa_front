@@ -385,6 +385,7 @@ const onClickRoundChangeButton_2 = async () =>{
   <button
     onClick={() => {
       const column_name_arr =  ["고유", "차수", "상태",  "이름", "연락처", "기타", "메모", "랜딩명", "신청일시", "매체", "이벤트", "등록IP"]
+      //이 부분
       const data_arr = alldata.filter(obj => obj.status !== '99').map(obj => {
         const status = obj.status ? STORE_STATUS[obj.status as keyof typeof STORE_STATUS].text : ''
         return [obj.id, obj.round_num, status, obj.cust_name, obj.cust_phone_number, obj.info_data, obj.memo, obj.page_name, formatTimeStamp(obj.last_update), obj.media_name, obj.event_name, obj.reg_ip]

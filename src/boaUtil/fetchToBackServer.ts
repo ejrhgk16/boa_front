@@ -29,6 +29,8 @@ export async function boaGet(targetUrl:string, nextReq :NextRequest ,successCall
  
 
     const res = await fetch(url, option);
+    // console.log("boaget1")
+    // console.log(successCallback.toString())
 
     if(res.ok){
       const result = await res.json()//body읽어오는거
@@ -54,8 +56,9 @@ export async function boaGet(targetUrl:string, nextReq :NextRequest ,successCall
         const res = await fetch(url, option);
         return res
       }
-
-      const nextRes2 = await errorHandler(res, nextReq, callback)
+      console.log("boaget2")
+      console.log(successCallback.toString())
+      const nextRes2 = await errorHandler(res, nextReq, callback, successCallback)
       return nextRes2
     }
 
@@ -107,7 +110,7 @@ async function boaPost(targetUrl:string, nextReq :NextRequest, successCallback:(
         const res = await fetch(url, option);
         return res
       }
-      const nextRes2 = await errorHandler(res, nextReq, callback)
+      const nextRes2 = await errorHandler(res, nextReq, callback, successCallback )
       return nextRes2
     }
 
@@ -176,7 +179,7 @@ async function boaPost_formData(targetUrl:string, nextReq :NextRequest, successC
         
        
       }
-      const nextRes2 = await errorHandler(res, nextReq, callback, "Y")
+      const nextRes2 = await errorHandler(res, nextReq, callback,  successCallback, "Y")
       return nextRes2
     }
   
@@ -190,7 +193,7 @@ async function boaPost_formData(targetUrl:string, nextReq :NextRequest, successC
 
 }
 
-async function errorHandler(errorRes : Response, nextReq :NextRequest, callback=async (headers : any):Promise<any>=>{}, isForm_YN : any = "N"){
+async function errorHandler(errorRes : Response, nextReq :NextRequest, callback=async (headers : any):Promise<any>=>{}, successCallback:(x?:any)=>any=()=>{}, isForm_YN : any = "N"){
   const status = errorRes.status
 
   const xRealIp = nextReq.headers.get("x-real-ip") || '::1'
@@ -255,7 +258,22 @@ async function errorHandler(errorRes : Response, nextReq :NextRequest, callback=
               const res2 =await callback(headers);
               const result2 = await res2.json()
 
-              const nextRes = NextResponse.json({data : result2}, {status : res2.status})
+              // console.log("successCallback")
+              // console.log(successCallback.toString())
+
+              const callbackResult = successCallback(result2);
+
+      
+              let resReturnData;
+              
+              if(callbackResult){
+                resReturnData = callbackResult
+              }else{
+                resReturnData = result2
+              }
+        
+
+              const nextRes = NextResponse.json({data : resReturnData}, {status : res2.status})
 
               //이 영역 맨위에서 실행되는게 맞는듯 
               nextRes.cookies.set({name:'refresh_token', value:refreshResult.refresh_token, httpOnly:true, secure:false,  path:"/"})
